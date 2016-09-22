@@ -20,5 +20,6 @@ console.log('hello Gus, you are in ultimate-shitposting random number 3 AAAhi!!!
 console.log(out.data);
 console.log('tag with name \'test\' exists:', tags.exists('test'));
 console.log('tag with name \'o3u2fweksdbj\' exists:', tags.exists('o3u2fweksdbj'))
+console.log(tags.keys());
 tags.remove('test');
-console.log('removed tag test, so exists is now', tags.exists('test'))
+console.log('removed tag test, so exists is now', tags.exists('test'));
