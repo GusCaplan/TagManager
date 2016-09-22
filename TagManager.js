@@ -29,7 +29,7 @@ class TagManager {
   }
 
   exists (key) {
-    return (this.storage.getItem(key) === null);
+    return (this.storage.getItem(key) !== null);
   }
 }
 
