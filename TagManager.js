@@ -24,7 +24,7 @@ class TagManager {
     return data;
   }
 
-  del (key) {
+  remove (key) {
     return this.storage.removeItem(key);
   }
 
