@@ -33,7 +33,7 @@ class TagManager {
   }
 
   keys () {
-    return this.storage._keys;
+    return new LocalStorage(this.path)._keys;
   }
 }
 

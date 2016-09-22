@@ -4,6 +4,8 @@ const tags = new TagManager();
 
 tags.set('test', 'hello %name%, you are in %channel% random number %random|1|4% %omfg|hi%', {author: '1234'});
 
+tags.set('o shit', 'hello');
+
 const replace = {
   'name': 'Gus',
   'channel': 'ultimate-shitposting'
