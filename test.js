@@ -15,4 +15,6 @@ const functions = {
 }
 
 let out = tags.get('test', replace, functions);
+console.log('The next two lines should equal each other except for the random number ;)')
+console.log('hello Gus, you are in ultimate-shitposting random number 3 AAAhi!!!')
 console.log(out.data);
