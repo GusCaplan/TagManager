@@ -1,0 +1,12 @@
+{
+  "name": "tagmanager",
+  "version": "1.0.0",
+  "description": "manages tags mostly for discord bots",
+  "main": "TagManager.js",
+  "dependencies": {
+    "node-localstorage": "^1.3.0"
+  },
+  "devDependencies": {},
+  "author": "Gus Caplan",
+  "license": "MIT"
+}
