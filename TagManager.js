@@ -27,6 +27,10 @@ class TagManager {
   del (key) {
     return this.storage.removeItem(key);
   }
+
+  exists (key) {
+    return (this.storage.getItem(key) === null);
+  }
 }
 
 module.exports = TagManager;
