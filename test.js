@@ -1,11 +1,5 @@
 const TagManager = require('./TagManager');
 
-const tags = new TagManager();
-
-tags.set('test', 'hello %name%, you are in %channel% random number %random|1|4% %omfg|hi%', {author: '1234'});
-
-tags.set('o shit', 'hello');
-
 const replace = {
   'name': 'Gus',
   'channel': 'ultimate-shitposting'
@@ -16,7 +10,18 @@ const functions = {
   'random': (min, max) => Math.floor(Math.random() * parseInt(max)) + parseInt(min)
 }
 
-let out = tags.get('test', replace, functions);
+const tags = new TagManager({
+  functions: functions,
+  replace: replace,
+  wrapper: '<>', // default is '%%'. first char is the opener, second is the closer. regex characters must be escaped e.g: '\(\)'
+  seperator: '/' // default is '|'. regex characters don't need to be escaped
+});
+
+tags.set('test', 'hello <name>, you are in <channel> random number <random/1/4> <omfg/hi>', {author: '1234'});
+
+tags.set('o shit', 'hello');
+
+let out = tags.get('test');
 console.log('The next two lines should equal each other except for the random number ;)')
 console.log('hello Gus, you are in ultimate-shitposting random number 3 AAAhi!!!');
 console.log(out.data);
