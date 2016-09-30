@@ -15,8 +15,10 @@ class TagManager {
     return this.storage.setItem(key, JSON.stringify(data));
   }
 
-  get (key) {
+  get (key, functions = {}, replace = {}) {
     let data = JSON.parse(this.storage.getItem(key));
+    Object.assign(functions, this.functions);
+    replace = Object.assign(replace, this.replace);
     Object.keys(this.functions).forEach(k => {
       data.data = data.data.replace(new RegExp(`${this.wrapper[0]}${k}(.+?)${this.wrapper[1]}`, 'g'), (match, x1) => {
         return this.functions[k].apply(null, x1.split(this.separator).splice(1));
