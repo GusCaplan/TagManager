@@ -19,12 +19,12 @@ class TagManager {
     replace = Object.assign(replace, this.replace);
     functions = Object.assign(functions, this.functions);
     let data = JSON.parse(this.storage.getItem(key));
-    Object.keys(this.functions).forEach(k => {
+    Object.keys(functions).forEach(k => {
       data.data = data.data.replace(new RegExp(`${this.wrapper[0]}${k}(.+?)${this.wrapper[1]}`, 'g'), (match, x1) => {
         return this.functions[k].apply(null, x1.split(this.separator).splice(1));
       });
     });
-    Object.keys(this.replace).forEach(k => {
+    Object.keys(replace).forEach(k => {
       data.data = data.data.replace(new RegExp(`${this.wrapper[0]}${k}${this.wrapper[1]}`, 'g'), this.replace[k]);
     });
     return data;
