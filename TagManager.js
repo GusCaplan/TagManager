@@ -4,6 +4,10 @@ class TagManager {
   constructor (options = {}) {
     this.path = options.path || './tags';
     this.storage = new LocalStorage(this.path);
+    this.wrapper = options.wrapper || '%';
+    this.separator = options.separator || '|';
+    this.replace = options.replace || {};
+    this.functions = options.functions || {};
   }
 
   set (key, value, meta) {
@@ -13,13 +17,13 @@ class TagManager {
 
   get (key, replace = {}, functions = {}) {
     let data = JSON.parse(this.storage.getItem(key));
-    Object.keys(functions).forEach(k => {
-      data.data = data.data.replace(new RegExp(`%${k}(.+?)%`, 'g'), (match, x1) => {
-        return functions[k].apply(null, x1.split('|').splice(1));
+    Object.keys(this.functions).forEach(k => {
+      data.data = data.data.replace(new RegExp(`${this.wrapper}${k}(.+?)${this.wrapper}`, 'g'), (match, x1) => {
+        return this.functions[k].apply(null, x1.split(this.separator).splice(1));
       });
     });
-    Object.keys(replace).forEach(k => {
-      data.data = data.data.replace(new RegExp(`%${k}%`, 'g'), replace[k]);
+    Object.keys(this.replace).forEach(k => {
+      data.data = data.data.replace(new RegExp(`${this.wrapper}${k}${this.wrapper}`, 'g'), this.replace[k]);
     });
     return data;
   }
