@@ -30,6 +30,11 @@ class TagManager {
     return data;
   }
 
+  raw (key) {
+    let data = JSON.parse(this.storage.getItem(key));
+    return data.data;
+  }
+
   remove (key) {
     return this.storage.removeItem(key);
   }
