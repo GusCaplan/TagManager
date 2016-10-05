@@ -1,12 +1,10 @@
 const LocalStorage = require('node-localstorage').LocalStorage;
+const compiler = require('./compiler');
 
 class TagManager {
   constructor (options = {}) {
     this.path = options.path || './tags';
     this.storage = new LocalStorage(this.path);
-    this.wrapper = options.wrapper || '%%';
-    this.separator = options.separator || '|';
-    this.replace = options.replace || {};
     this.functions = options.functions || {};
   }
 
@@ -15,18 +13,10 @@ class TagManager {
     return this.storage.setItem(key, JSON.stringify(data));
   }
 
-  get (key, replace = {}, functions = {}) {
-    replace = Object.assign(replace, this.replace);
+  get (key, functions = {}) {
     functions = Object.assign(functions, this.functions);
     let data = JSON.parse(this.storage.getItem(key));
-    Object.keys(functions).forEach(k => {
-      data.data = data.data.replace(new RegExp(`${this.wrapper[0]}${k}(.+?)${this.wrapper[1]}`, 'g'), (match, x1) => {
-        return functions[k].apply(null, x1.split(this.separator).splice(1));
-      });
-    });
-    Object.keys(replace).forEach(k => {
-      data.data = data.data.replace(new RegExp(`${this.wrapper[0]}${k}${this.wrapper[1]}`, 'g'), this.replace[k]);
-    });
+    data.data = compiler(data.data, functions);
     return data;
   }
 
