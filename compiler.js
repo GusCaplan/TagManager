@@ -2,7 +2,7 @@ const chevrotain = require('chevrotain');
 
 Array.prototype.__defineGetter__('last', function () {
   return this[this.length - 1];
-})
+});
 
 var extendToken = chevrotain.extendToken;
 var Lexer = chevrotain.Lexer;
@@ -26,6 +26,14 @@ const tokenize = text => {
 }
 
 module.exports = (input, functions = {}) => {
+  let builtin = {
+    'get': i => runtimeArgs[i],
+    'set': (i, x) => runtimeArgs[i] = x
+  }
+  Object.keys(builtin).forEach(k => {
+    if (k in functions) throw new Error(`"${k}" is reserved`)
+  })
+  functions = Object.assign(builtin, functions);
   let lexed = tokenize(input);
   let tokens = lexed.tokens;
 
@@ -35,6 +43,7 @@ module.exports = (input, functions = {}) => {
     exec: []
   };
   let lastEX = 0;
+  let runtimeArgs = {};
 
   const compile = (scoped, ex, called = false) => {
     delete scoped.next;
