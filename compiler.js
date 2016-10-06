@@ -14,7 +14,7 @@ const Lexer = chevrotain.Lexer;
 const FunctionOpen = extendToken('FunctionOpen', /{/);
 const FunctionClose = extendToken('FunctionClose', /}/);
 const ArgumentSeperator = extendToken('ArgumentSeperator', /;/);
-const Identifier = extendToken('Identifier', /[\u0020-\u003A]|[\u003C-\u007A]|[\u007E-\uFFFF]|\u007C|[\r\n]/i);
+const Identifier = extendToken('Identifier', /([\u0020-\u003A]|[\u003C-\u007A]|[\u007E-\uFFFFF]|\u007C|[\r\n\v])+/i);
 
 const allTokens = [FunctionOpen, FunctionClose, ArgumentSeperator, Identifier];
 
@@ -24,7 +24,7 @@ const tokenize = text => {
   var lexResult = SelectLexer.tokenize(text);
 
   if (lexResult.errors.length >= 1) {
-    throw new Error(lexResult.errors[0].message);
+    throw new Error(lexResult.errors[0].message + ' ' + lexResult.errors[0].stack);
   }
   return lexResult;
 }
