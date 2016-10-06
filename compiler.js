@@ -35,7 +35,11 @@ module.exports = (input, functions = {}) => {
     'set': (i, x) => {
       runtimeArgs[i] = x;
       return;
-    }
+    },
+    'add': (...args) => args.reduce((a, b) => Number(a) + Number(b)),
+    'sub': (...args) => args.reduce((a, b) => Number(a) - Number(b)),
+    'div': (...args) => args.reduce((a, b) => Number(a) / Number(b)),
+    'mult': (...args) => args.reduce((a, b) => Number(a) * Number(b))
   }
   Object.keys(builtin).forEach(k => {
     if (k in functions) throw new Error(`"${k}" is reserved`)
