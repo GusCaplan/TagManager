@@ -4,23 +4,27 @@ Array.prototype.__defineGetter__('last', function () {
   return this[this.length - 1];
 });
 
-var extendToken = chevrotain.extendToken;
-var Lexer = chevrotain.Lexer;
+const extendToken = (name, find) => {
+  let token = chevrotain.extendToken(name, find);
+  token.STRING = token.PATTERN.toString().slice(1, -1);
+  return token;
+};
+const Lexer = chevrotain.Lexer;
 
-var Identifier = extendToken('Identifier', /[A-Za-z0-9 _.,!?"'\/]+/i);
-var FunctionOpen = extendToken('FunctionOpen', /{/);
-var FunctionClose = extendToken('FunctionClose', /}/);
-var ArgumentSeperator = extendToken('ArgumentSeperator', /;/);
+const FunctionOpen = extendToken('FunctionOpen', /{/);
+const FunctionClose = extendToken('FunctionClose', /}/);
+const ArgumentSeperator = extendToken('ArgumentSeperator', /;/);
+const Identifier = extendToken('Identifier', /[\u0020-\u003A]|[\u003C-\u007A]|[\u007E-\uFFFF]|\u007C|[\r\n]/i);
 
-var allTokens = [FunctionOpen, FunctionClose, Identifier, ArgumentSeperator];
+const allTokens = [FunctionOpen, FunctionClose, ArgumentSeperator, Identifier];
 
-var SelectLexer = new Lexer(allTokens, true);
+const SelectLexer = new Lexer(allTokens, true);
 
 const tokenize = text => {
   var lexResult = SelectLexer.tokenize(text);
 
   if (lexResult.errors.length >= 1) {
-    throw new Error('sad sad panda lexing errors detected')
+    throw new Error(lexResult.errors[0].message);
   }
   return lexResult;
 }
@@ -28,12 +32,22 @@ const tokenize = text => {
 module.exports = (input, functions = {}) => {
   let builtin = {
     'get': i => runtimeArgs[i],
-    'set': (i, x) => runtimeArgs[i] = x
+    'set': (i, x) => {
+      runtimeArgs[i] = x;
+      return;
+    }
   }
   Object.keys(builtin).forEach(k => {
     if (k in functions) throw new Error(`"${k}" is reserved`)
   })
   functions = Object.assign(builtin, functions);
+
+  input = input.split('\n').map(image => {
+    if (image.startsWith(FunctionOpen.STRING) &&
+    image.endsWith(FunctionClose.STRING)) return image.trim();
+    return image + '\n';
+  }).join('');
+
   let lexed = tokenize(input);
   let tokens = lexed.tokens;
 
@@ -118,5 +132,6 @@ module.exports = (input, functions = {}) => {
     }
     i.compiled = functions[i.run.function](...i.run.args);
   });
-  return run.exec.filter(e => !e.called).map(e => e.compiled).join('');
+  let compiled = run.exec.filter(e => !e.called).map(e => e.compiled).join('').trim();
+  return compiled;
 }

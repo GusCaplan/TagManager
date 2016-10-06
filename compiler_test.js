@@ -6,4 +6,8 @@ const functions = {
   'advanced': (...args) => args.join(', ')
 }
 
-console.log(compiler('yay {set;x;{add;1;2}} is {get;x}', functions));
+console.log(compiler(`{set;x;{add;1;2}}
+yay x is {get;x}
+{set;y;12}
+this is a newline
+A-Za-z0-9 _.,!?"'<>@#&*)($^-`, functions));
