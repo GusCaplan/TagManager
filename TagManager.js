@@ -1,8 +1,6 @@
 const LocalStorage = require('node-localstorage').LocalStorage;
 const TagScript = require('tagscript');
 const compiler = new TagScript();
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 
 class TagManager {
   constructor (options = {}) {
@@ -20,8 +18,10 @@ class TagManager {
     return new Promise((resolve, reject) => {
       functions = Object.assign(functions, this.functions);
       let data = JSON.parse(this.storage.getItem(key));
-      data.data = await(compiler.compile(data.data, functions));
-      resolve(data);
+      compiler.compile(data.data, functions).then(compiled => {
+        data.data = compiled;
+        resolve(data);
+      });
     });
   }
 
