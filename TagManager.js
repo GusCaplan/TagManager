@@ -20,6 +20,7 @@ class TagManager {
     return ohsync(() => {
       functions = Object.assign(functions, this.functions);
       let data = JSON.parse(this.storage.getItem(key));
+      if (!data) return undefined;
       data.data = ohwait(compiler.compile(data.data, functions));
       return data;
     })();
